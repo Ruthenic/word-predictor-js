@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>word-predictor</title>
+	</head>
+	<body>
+		<script>
+			function generator() {
+				const importObject = {
+				  imports: {
+				    imported_func: function(arg) {
+				      console.log(arg);
+				    }
+				  }
+				};
+				fetch('counts.txt').then(response => response.text()).then((data) => {
+					var counts = data
+				})
+				fetch("produce_wp.wasm") .then(bytes => bytes.arrayBuffer()) 
+				.then(mod => {
+				   var compiledmod = WebAssembly.compile(mod);
+				   compiledmod.then(gener=> {
+					let instance = new WebAssembly.Instance(gener, importObject)
+			      	console.log(instance.exports.gen(document.getElementById(genb), 15, counts));
+				   });
+				});
+			}
+		</script>
+		<input type="text" placeholder="Type first word" id="firstWord"></input>
+		<button id='genb' type="button" onclick="generator();">Generate Sentence!</button>
+	</body>
+</html>
