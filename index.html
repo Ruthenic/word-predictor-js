@@ -20,7 +20,8 @@
 				.then(mod => {
 				   var compiledmod = WebAssembly.compile(mod);
 				   compiledmod.then(gener=> {
-					let instance = new WebAssembly.Instance(gener, importObject)
+					//let instance = new WebAssembly.Instance(gener, importObject)
+					let instance = new WebAssembly.Instance(gener)
 			      	console.log(instance.exports.gen(document.getElementById(genb), 15, counts));
 				   });
 				});
