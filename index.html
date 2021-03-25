@@ -18,7 +18,12 @@
 			async function generator() {
 				document.getElementById("result").innerHTML = 'Creating sentence...';
 				//var importObject = { imports: { imported_func: arg => console.log(arg) }, module: {} };
-				var counts = await fetch('counts.txt');
+				for (i of document.getElementsByName("counts")){
+					if (i.checked == true) {
+						counts = await fetch(i.value + ".txt")
+					}
+				}
+				//var counts = await fetch('counts.txt');
 				counts = await counts.text();
 				//counts = getTextFromStream(counts.body);
 				//console.log(counts);
@@ -50,8 +55,12 @@
 				document.getElementById("result").innerHTML = result;
 			}
 		</script>
+		<input type="radio" id="uwuntu" name="counts" value="ubuntu">
+		<label for="uwuntu">Ubuntu DataSet</label><br>
+		<input type="radio" id="dialouge" name="counts" value="dialogue">
+		<label for="female">Dialouge DataSet</label><br>
 		<input id="gent"  type="text" placeholder="Type first word" id="firstWord"></input>
-		<button id='genb' type="button" onclick="generator();">Generate Sentence!</button>
+		<button id='genb' type="button" onclick="generator();">Generate Sentence!</button><br>
 		<p id='result'></p>
 	</body>
 </html>
