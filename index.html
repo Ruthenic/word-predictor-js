@@ -16,6 +16,7 @@
 				return out[Math.floor(Math.random() * out.length)];
 			}
 			async function generator() {
+				document.getElementById("error").innerHTML = ""
 				document.getElementById("result").innerHTML = 'Creating sentence...\nThis may take a while.';
 				//var importObject = { imports: { imported_func: arg => console.log(arg) }, module: {} };
 				for (i of document.getElementsByName("counts")){
