@@ -16,11 +16,12 @@
 				return out[Math.floor(Math.random() * out.length)];
 			}
 			async function generator() {
-				document.getElementById("result").innerHTML = 'Creating sentence...';
+				document.getElementById("result").innerHTML = 'Creating sentence...\nThis may take a while.';
 				//var importObject = { imports: { imported_func: arg => console.log(arg) }, module: {} };
 				for (i of document.getElementsByName("counts")){
 					if (i.checked == true) {
-						counts = await fetch(i.value + ".txt")
+						counts = await fetch(i.value + ".txt");
+						break;
 					}
 				}
 				//var counts = await fetch('counts.txt');
@@ -35,6 +36,7 @@
 				var result = '';
 				while (n < 25) {
 					result += word + ' ';
+					console.log(word)
 					newpairs = [];
 					//choices = []
 					//weights = []
@@ -48,7 +50,14 @@
 					}
 					//console.log(choices);
 					//console.log(weights);
-					word = weightedRandom(newpairs).replace("\\n", "");
+					try {
+						word = weightedRandom(newpairs).replace("\\n", "");
+					}
+					catch(err) {
+						document.getElementById("error").innerHTML = "Error, printing what we have already! Error message: " + err.message;
+						document.getElementById("result").innerHTML = result;
+						throw new Error();
+					}
 					n++;
 				}
 				console.log(result);
@@ -62,5 +71,6 @@
 		<input id="gent"  type="text" placeholder="Type first word" id="firstWord"></input>
 		<button id='genb' type="button" onclick="generator();">Generate Sentence!</button><br>
 		<p id='result'></p>
+		<p id='error'></p>
 	</body>
 </html>
