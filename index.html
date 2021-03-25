@@ -5,29 +5,53 @@
 	</head>
 	<body>
 		<script>
-			function generator() {
-				const importObject = {
-				  imports: {
-				    imported_func: function(arg) {
-				      console.log(arg);
+			function weightedRandom (data) {
+				//code plagurized from https://blobfolio.com/2019/randomizing-weighted-choices-in-javascript/
+				let out = [];
+				for (let i = 0; i < data.length; ++i) {
+				    for (let j = 0; j < data[i][1]; ++j) {
+				        out.push(data[i][0]);
 				    }
-				  }
-				};
-				fetch('counts.txt').then(response => response.text()).then((data) => {
-					var counts = data
-				})
-				fetch("produce_wp.wasm") .then(bytes => bytes.arrayBuffer()) 
-				.then(mod => {
-				   var compiledmod = WebAssembly.compile(mod);
-				   compiledmod.then(gener=> {
-					//let instance = new WebAssembly.Instance(gener, importObject)
-					let instance = new WebAssembly.Instance(gener)
-			      	console.log(instance.exports.gen(document.getElementById(genb), 15, counts));
-				   });
-				});
+				}
+				return out[Math.floor(Math.random() * out.length)];
+			}
+			async function generator() {
+				document.getElementById("result").innerHTML = 'Creating sentence...';
+				//var importObject = { imports: { imported_func: arg => console.log(arg) }, module: {} };
+				var counts = await fetch('counts.txt');
+				counts = await counts.text();
+				//counts = getTextFromStream(counts.body);
+				//console.log(counts);
+				counts = await counts.split('\n');
+				console.log(counts);
+				var word = document.getElementById("gent").value;
+				console.log(word);
+				var n = 0;
+				var result = '';
+				while (n < 25) {
+					result += word + ' ';
+					newpairs = [];
+					//choices = []
+					//weights = []
+					for (pair of counts){
+						if (pair.split(';')[0] == word){
+							//console.log(pair)
+							newpairs = [...newpairs, [pair.split(";")[1], parseInt(pair.split(";")[2])]];
+							//choices = [...choices, pair.split(";")[1]]
+							//weights = [...weights, parseInt(pair.split(";")[2])]
+						}
+					}
+					//console.log(choices);
+					//console.log(weights);
+					word = weightedRandom(newpairs).replace("\\n", "");
+					n++;
+				}
+				console.log(result);
+				document.getElementById("result").innerHTML = result;
 			}
 		</script>
-		<input type="text" placeholder="Type first word" id="firstWord"></input>
+		<input id="gent"  type="text" placeholder="Type first word" id="firstWord"></input>
 		<button id='genb' type="button" onclick="generator();">Generate Sentence!</button>
+		<p id='result'></p>
 	</body>
 </html>
